@@ -1,4 +1,4 @@
-public class Nashmap<T> {
+public class Nashmap {
     private NashmapElement[] elements;
     private int currentIndex;
     private static class NashmapElement<Type> {
@@ -55,6 +55,16 @@ public class Nashmap<T> {
             }
         }
         return false;
+    }
+
+    public void resize(int size) {
+        if (size > currentIndex) {
+            NashmapElement[] elements = this.elements;
+            this.elements = new NashmapElement<?>[size];
+            System.arraycopy(elements, 0, this.elements, 0, elements.length);
+        } else {
+            throw new Error("Resize beyond minimum index.");
+        }
     }
 
     public int size() {
