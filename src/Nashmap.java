@@ -25,6 +25,11 @@ public class Nashmap<T> {
     }
 
     public void add(String key, Object object) {
+        if (this.elements.length <= currentIndex) {
+            NashmapElement[] elements = this.elements;
+            this.elements = new NashmapElement<?>[elements.length * 2];
+            System.arraycopy(elements, 0, this.elements, 0, elements.length);
+        }
         this.elements[currentIndex] = new NashmapElement<>(key.hashCode(), object);
         this.currentIndex++;
     }
