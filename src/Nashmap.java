@@ -57,6 +57,8 @@ public class Nashmap {
         return false;
     }
 
+    // Currently throws error if resize beyond what's possible,
+    // but I'm considering changing it so that it just returns false
     public void resize(int size) {
         if (size > currentIndex) {
             NashmapElement[] elements = this.elements;
