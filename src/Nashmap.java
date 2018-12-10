@@ -13,6 +13,10 @@ public class Nashmap<T> {
         Type getValue() {
             return value;
         }
+
+        int getKey() {
+            return key;
+        }
     }
 
     public Nashmap(int size) {
@@ -27,8 +31,28 @@ public class Nashmap<T> {
 
     public Object get(String key) {
         for (int i = 0; i < currentIndex; i++) {
-            elements[i].getValue();
+            if (elements[i].getKey() == key.hashCode()) {
+                return elements[i].getValue();
+            }
         }
         return null;
+    }
+
+    public boolean remove(String key) {
+        for (int i = 0; i < currentIndex; i++) {
+            if (elements[i].getKey() == key.hashCode()) {
+                elements[i] = null;
+                for (int j = i + 1; j < currentIndex; j++) {
+                    elements[i] = elements[j];
+                }
+                currentIndex--;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int size() {
+        return currentIndex;
     }
 }
