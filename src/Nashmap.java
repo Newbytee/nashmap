@@ -35,8 +35,9 @@ public class Nashmap {
     }
 
     public Object get(String key) {
+        int hashedKey = key.hashCode();
         for (int i = 0; i < currentIndex; i++) {
-            if (elements[i].getKey() == key.hashCode()) {
+            if (elements[i].getKey() == hashedKey) {
                 return elements[i].getValue();
             }
         }
@@ -44,8 +45,9 @@ public class Nashmap {
     }
 
     public boolean remove(String key) {
+        int hashedKey = key.hashCode();
         for (int i = 0; i < currentIndex; i++) {
-            if (elements[i].getKey() == key.hashCode()) {
+            if (elements[i].getKey() == hashedKey) {
                 elements[i] = null;
                 for (int j = i + 1; j < currentIndex; j++) {
                     elements[i] = elements[j];

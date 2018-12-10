@@ -2,16 +2,20 @@ public class Test {
     public static void main(String[] args) {
         Nashmap map = new Nashmap(2);
 
-        map.add("foobar", "meep");
-        map.add("shrek", "heck");
-        map.add("mopo", "fobo");
-        map.add("succ", 1);
+        for (int i = 0; i < 1000000; i++) {
+            map.add("foobar" + Integer.toString(i), "meep");
+            map.add("shrek" + Integer.toString(i), "heck");
+            map.add("mopo" + Integer.toString(i), "fobo");
+            map.add("succ" + Integer.toString(i), 1);
+        }
+
+
 
         //System.out.println(map.get("foobar"));
         //System.out.println(map.size());
         map.remove("foobar");
         //System.out.println(map.get("shrek"));
-        map.resize(0);
+        //map.resize(0);
         System.out.println(map.size());
         //System.out.println(map.get("succ"));
 
