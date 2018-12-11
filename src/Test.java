@@ -16,7 +16,9 @@ public class Test {
         map.remove("foobar");
         //System.out.println(map.get("shrek"));
         //map.resize(0);
+        System.out.println(map.elements());
         System.out.println(map.size());
+        System.out.println(map.exists("succ999"));
         //System.out.println(map.get("succ"));
 
         //System.out.println("foobar".hashCode() % 100);

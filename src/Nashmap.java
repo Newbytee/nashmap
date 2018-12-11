@@ -59,6 +59,16 @@ public class Nashmap {
         return false;
     }
 
+    public boolean exists(String key) {
+        int hashedKey = key.hashCode();
+        for (int i = 0; i < currentIndex; i++) {
+            if (elements[i].getKey() == hashedKey) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Currently throws error if resize beyond what's possible,
     // but I'm considering changing it so that it just returns false
     public void resize(int size) {
@@ -71,7 +81,11 @@ public class Nashmap {
         }
     }
 
-    public int size() {
+    public int elements() {
         return currentIndex;
+    }
+
+    public int size() {
+        return elements.length;
     }
 }
