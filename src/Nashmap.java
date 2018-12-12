@@ -92,6 +92,28 @@ public class Nashmap {
         }
     }
 
+    public int elements() {
+        int elements = 0;
+
+        for (int i = 0; i < this.elements.length; i++) {
+            if (this.elements[i] != null) {
+                elements++;
+            }
+        }
+
+        return elements;
+    }
+
+    public boolean isEmpty() {
+        return elements() == 0;
+    }
+
+    public void clear() {
+        for (int i = 0; i < this.elements.length; i++) {
+            this.elements[i] = null;
+        }
+    }
+
     public int size() {
         return elements.length;
     }

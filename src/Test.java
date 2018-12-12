@@ -4,8 +4,10 @@ public class Test {
 
         map.put("foobar", "shrek");
 
-        System.out.println(map.get("foobar"));
-        System.out.println(map.delete("foobar"));
-        System.out.println(map.get("foobar"));
+        map.get("foobar");
+        System.out.println(map.isEmpty());
+        map.delete("foobar");
+        System.out.println(map.isEmpty());
+        map.get("foobar");
     }
 }
