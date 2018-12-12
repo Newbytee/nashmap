@@ -1,11 +1,10 @@
 public class Nashmap {
-    private NashmapElement[] elements;
-    private int currentIndex;
-    private static class NashmapElement<Type> {
+    private Bucket[] elements;
+    private static class Bucket<Type> {
         Type value;
         int key;
 
-        NashmapElement(int key, Type value) {
+        Bucket(int key, Type value) {
             this.value = value;
             this.key = key;
         }
@@ -20,69 +19,77 @@ public class Nashmap {
     }
 
     public Nashmap(int size) {
-        this.elements = new NashmapElement<?>[size];
-        this.currentIndex = 0;
+        this.elements = new Bucket<?>[size];
     }
 
-    public void add(String key, Object object) {
-        if (this.elements.length <= currentIndex) {
-            NashmapElement[] elements = this.elements;
-            this.elements = new NashmapElement<?>[elements.length * 2];
-            System.arraycopy(elements, 0, this.elements, 0, elements.length);
+    private int find(int hashedKey, boolean findNull) {
+        int index, i = 0, cycles = 0;
+
+        do {
+            index = (this.elements.length % hashedKey) + i;
+
+            while (index >= this.elements.length) {
+                index -= this.elements.length;
+            }
+
+            if (findNull) {
+                if (this.elements[index] == null) {
+                    return index;
+                }
+            } else {
+                if (this.elements[index] != null && this.elements[index].getKey() == hashedKey) {
+                    return index;
+                }
+            }
+
+            i += 3;
+            cycles++;
+        } while (this.elements[index] == null && cycles < elements.length);
+
+        return -1;
+    }
+
+    public boolean put(String key, Object object) {
+        int hashedKey = key.hashCode();
+        int index = find(hashedKey, true);
+
+        if (index >= 0) {
+            this.elements[index] = new Bucket<>(hashedKey, object);
+            return true;
+        } else {
+            return false;
         }
-        this.elements[currentIndex] = new NashmapElement<>(key.hashCode(), object);
-        this.currentIndex++;
     }
 
     public Object get(String key) {
-        int hashedKey = key.hashCode();
-        for (int i = 0; i < currentIndex; i++) {
-            if (elements[i].getKey() == hashedKey) {
-                return elements[i].getValue();
-            }
+        int index = find(key.hashCode(), false);
+
+        if (index >= 0) {
+            return this.elements[index].getValue();
+        } else {
+            return null;
         }
-        return null;
     }
 
-    public boolean remove(String key) {
-        int hashedKey = key.hashCode();
-        for (int i = 0; i < currentIndex; i++) {
-            if (elements[i].getKey() == hashedKey) {
-                elements[i] = null;
-                for (int j = i + 1; j < currentIndex; j++) {
-                    elements[i] = elements[j];
-                }
-                currentIndex--;
-                return true;
-            }
+    public boolean delete(String key) {
+        int index = find(key.hashCode(), false);
+
+        if (index >= 0) {
+            this.elements[index] = null;
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public boolean exists(String key) {
-        int hashedKey = key.hashCode();
-        for (int i = 0; i < currentIndex; i++) {
-            if (elements[i].getKey() == hashedKey) {
-                return true;
-            }
-        }
-        return false;
-    }
+        int index = find(key.hashCode(), false);
 
-    // Currently throws error if resize beyond what's possible,
-    // but I'm considering changing it so that it just returns false
-    public void resize(int size) {
-        if (size > currentIndex) {
-            NashmapElement[] elements = this.elements;
-            this.elements = new NashmapElement<?>[size];
-            System.arraycopy(elements, 0, this.elements, 0, elements.length);
+        if (index >= 0) {
+            return true;
         } else {
-            throw new Error("Resize beyond minimum index.");
+            return false;
         }
-    }
-
-    public int elements() {
-        return currentIndex;
     }
 
     public int size() {
