@@ -40,6 +40,11 @@ public class Nashmap {
             } else {
                 if (this.buckets[index] != null && this.buckets[index].getKey() == hashedKey) {
                     return index;
+                // If we find null, return -1 due to that there doesn't seem to be
+                // a matching bucket. Though, what if the initial bucket with this
+                // index was removed? I don't know. I'll have to think about this
+                } else if (this.buckets[index] == null) {
+                    return -1;
                 }
             }
 
@@ -90,11 +95,7 @@ public class Nashmap {
     public boolean exists(String key) {
         int index = find(key.hashCode(), false);
 
-        if (index >= 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return index >= 0;
     }
 
     // Return the amount of elements with a value (that aren't null) in the map

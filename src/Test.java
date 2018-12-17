@@ -9,5 +9,7 @@ public class Test {
         map.delete("foobar");
         System.out.println(map.isEmpty());
         map.get("foobar");
+        map.put("foobar", "zoop");
+        System.out.println(map.get("foobar"));
     }
 }
