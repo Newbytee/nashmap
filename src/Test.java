@@ -2,9 +2,11 @@ public class Test {
     public static void main(String[] args) {
         Nashmap map = new Nashmap(10);
 
-        map.put("foobar", "shrek");
+        System.out.println(20 % 10);
 
-        map.get("foobar");
+        map.put("foobkkar", "shrek");
+
+        System.out.println(map.get("foobkkar"));
         System.out.println(map.isEmpty());
         map.delete("foobar");
         System.out.println(map.isEmpty());

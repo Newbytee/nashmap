@@ -22,43 +22,51 @@ public class Nashmap {
         this.buckets = new Bucket<?>[size];
     }
 
+    private int getHash(String key) {
+        int hash = key.hashCode();
+
+        if (hash < 0) {
+            hash = hash * -1;
+        }
+
+        return hash;
+    }
+
     // Generic method for finding the index of a key and returning it
-    private int find(int hashedKey, boolean findNull) {
-        int index, i = 0, cycles = 0;
+    private int findObject(int hashedKey) {
+
+        int i = hashedKey % this.buckets.length;
 
         do {
-            index = (this.buckets.length % hashedKey) + i;
-
-            while (index >= this.buckets.length) {
-                index -= this.buckets.length;
+            if (this.buckets[i] != null && this.buckets[i].getKey() == hashedKey) {
+                return i;
             }
 
-            if (findNull) {
-                if (this.buckets[index] == null) {
-                    return index;
-                }
-            } else {
-                if (this.buckets[index] != null && this.buckets[index].getKey() == hashedKey) {
-                    return index;
-                // If we find null, return -1 due to that there doesn't seem to be
-                // a matching bucket. Though, what if the initial bucket with this
-                // index was removed? I don't know. I'll have to think about this
-                } else if (this.buckets[index] == null) {
-                    return -1;
-                }
+            i = (i + 3) % this.buckets.length;
+        } while (buckets[i] == null);
+
+        return -1;
+    }
+
+    private int findNull(int hashedKey) {
+
+        hashedKey = hashedKey % this.buckets.length;
+
+        do {
+            if (this.buckets[hashedKey] == null) {
+                return hashedKey;
             }
 
-            i += 3;
-            cycles++;
-        } while (this.buckets[index] == null && cycles < buckets.length);
+            hashedKey = (hashedKey + 3) % this.buckets.length;
+        } while (buckets[hashedKey] != null);
 
         return -1;
     }
 
     // Add an item to the map
     public boolean put(String key, Object object) {
-        int hashedKey = key.hashCode();
-        int index = find(hashedKey, true);
+        int hashedKey = getHash(key);
+        int index = findNull(hashedKey);
 
         if (index >= 0) {
             this.buckets[index] = new Bucket<>(hashedKey, object);
@@ -70,7 +78,7 @@ public class Nashmap {
 
     // Returns item from the map associated with specified key
     public Object get(String key) {
-        int index = find(key.hashCode(), false);
+        int index = findObject(getHash(key));
 
         if (index >= 0) {
             return this.buckets[index].getValue();
@@ -81,7 +89,7 @@ public class Nashmap {
 
     // Delete item associated with specified key and return whether anything was deleted
     public boolean delete(String key) {
-        int index = find(key.hashCode(), false);
+        int index = findObject(getHash(key));
 
         if (index >= 0) {
             this.buckets[index] = null;
@@ -93,7 +101,7 @@ public class Nashmap {
 
     // Return whether there is an item associated with specified key
     public boolean exists(String key) {
-        int index = find(key.hashCode(), false);
+        int index = findObject(getHash(key));
 
         return index >= 0;
     }
